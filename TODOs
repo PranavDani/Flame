@@ -1,0 +1,4 @@
+- I need to be able to trace timestamps and APIs from cuda programs.
+- I need to be simultaneously be able to trace GPU power consuption values through NVML. (Coarse-grained)
+
+Ideas:

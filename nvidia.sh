@@ -1,0 +1,1 @@
+nvidia-smi --query-gpu=timestamp,power.draw --format=csv -lms 50 -f nvidia-smi.log
