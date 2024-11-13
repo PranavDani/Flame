@@ -1,1 +1,39 @@
-nvidia-smi --query-gpu=timestamp,power.draw --format=csv -lms 50 -f nvidia-smi.log
+#!/bin/bash
+
+# Check if sufficient arguments are provided
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <executable_path> [<executable_args>...]"
+    exit 1
+fi
+
+# Get the executable path and name
+executable_path="$1"
+executable_name=$(basename "$1")
+results_dir="Results/$executable_name"
+
+echo "Executable name: $executable_name"
+
+# make a directory to store the results
+mkdir -p "$results_dir"
+
+# Run the executable in background and pipe the output to a log file
+sudo $executable_path "${@:2}" 2>&1 | tee "$results_dir/output.log" &
+executable_pid=$!
+
+echo "Executable PID: $executable_pid is running"
+
+if [ $? -ne 0 ]; then
+    echo "Error: Executable failed to run"
+    exit 1
+fi
+
+# Run nvidia-smi in background and log the power draw of the GPU
+sudo nvidia-smi --query-gpu=timestamp,power.draw --format=csv -lms 100 -f "$results_dir/$executable_name-smi.csv" & pid_nvidia=$!
+
+wait $executable_pid
+echo "Executable PID: $executable_pid has finished running"
+
+sudo kill $pid_nvidia
+
+echo "Running report.py"
+./report.py "$results_dir/$executable_name-smi.csv"
