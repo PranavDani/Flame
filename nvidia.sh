@@ -6,6 +6,10 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
+
+
+
+
 # Get the executable path and name
 executable_path="$1"
 executable_name=$(basename "$1")
@@ -16,9 +20,11 @@ echo "Executable name: $executable_name"
 # make a directory to store the results
 mkdir -p "$results_dir"
 
+# --stats=true - Enable this to display stats after the run
 # Run the executable in background and pipe the output to a log file
-sudo $executable_path "${@:2}" 2>&1 | tee "$results_dir/output.log" &
+sudo nsys profile -t cuda,nvtx,osrt,cudnn,cublas -o "$results_dir/$executable_name.nsys-rep" "$executable_path" "${@:2}" &
 executable_pid=$!
+# sudo $executable_path "${@:2}" 2>&1 | tee "$results_dir/output.log" &
 
 echo "Executable PID: $executable_pid is running"
 
@@ -37,3 +43,5 @@ sudo kill $pid_nvidia
 
 echo "Running report.py"
 ./report.py "$results_dir/$executable_name-smi.csv"
+
+nsys stats --report cuda_kern_exec_trace --format csv,column --output "$results_dir/$executable_name",- "$results_dir/$executable_name.nsys-rep" 
