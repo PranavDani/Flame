@@ -22,8 +22,7 @@ mkdir -p "$results_dir"
 
 # --stats=true - Enable this to display stats after the run
 # Run the executable in background and pipe the output to a log file
-sudo nsys profile -t cuda,nvtx,osrt,cudnn,cublas -o "$results_dir/$executable_name.nsys-rep" "$executable_path" "${@:2}" &
-executable_pid=$!
+sudo nsys profile -t cuda,nvtx,osrt,cudnn,cublas -o "$results_dir/$executable_name.nsys-rep" "$executable_path" "${@:2}" & executable_pid=$!
 # sudo $executable_path "${@:2}" 2>&1 | tee "$results_dir/output.log" &
 
 echo "Executable PID: $executable_pid is running"
@@ -37,11 +36,14 @@ fi
 sudo nvidia-smi --query-gpu=timestamp,power.draw --format=csv -lms 100 -f "$results_dir/$executable_name-smi.csv" & pid_nvidia=$!
 
 wait $executable_pid
-echo "Executable PID: $executable_pid has finished running"
-
 sudo kill $pid_nvidia
 
-echo "Running report.py"
-./report.py "$results_dir/$executable_name-smi.csv"
+echo "Executable PID: $executable_pid has finished running"
+echo "Killing nvidia-smi PID: $pid_nvidia"
 
-nsys stats --report cuda_kern_exec_trace --format csv,column --output "$results_dir/$executable_name",- "$results_dir/$executable_name.nsys-rep" 
+echo "Running nsys stats"
+nsys stats --report cuda_kern_exec_trace:base --format csv,column --output "$results_dir/$executable_name",- "$results_dir/$executable_name.nsys-rep" 
+
+
+echo "Running report.py"
+./report.py "$results_dir/$executable_name.csv"
