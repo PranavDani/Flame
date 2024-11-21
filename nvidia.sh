@@ -47,3 +47,7 @@ nsys stats --report cuda_kern_exec_trace:base --format csv,column --output "$res
 
 echo "Running report.py"
 ./report.py "$results_dir/$executable_name.csv"
+
+
+echo "Running flamegraph.pl for GPU"
+./flamegraph.pl --title "GPU Energy Flame Graph" --countname "microwatts" ./Results/$executable_name/$executable_name\_gpu.collapsed > "$results_dir/$executable_name-gpu.svg"
