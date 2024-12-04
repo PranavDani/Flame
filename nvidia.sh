@@ -6,15 +6,10 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-
-
-
-
 # Get the executable path and name
 executable_path="$1"
 executable_name=$(basename "$1")
 results_dir="Results/$executable_name"
-
 echo "Executable name: $executable_name"
 
 # make a directory to store the results
@@ -42,7 +37,7 @@ echo "Executable PID: $executable_pid has finished running"
 echo "Killing nvidia-smi PID: $pid_nvidia"
 
 echo "Running nsys stats"
-nsys stats --report cuda_kern_exec_trace:base --format csv,column --output "$results_dir/$executable_name",- "$results_dir/$executable_name.nsys-rep" 
+nsys stats --report cuda_gpu_trace:base --format csv,column --output "$results_dir/$executable_name",- "$results_dir/$executable_name.nsys-rep" 
 
 
 echo "Running report.py"
