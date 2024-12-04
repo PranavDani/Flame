@@ -55,11 +55,23 @@ def plot_power_consumption(x, y, full_path_smi, min_ts, max_ts):
 
 def combine_data(df_smi, df_cuda, power):
     rows = []
+    cuda_index = 0
     for i in range(len(df_smi) - 1):
         start_time = df_smi['timestamp_nanoseconds'].iloc[i]
         end_time = df_smi['timestamp_nanoseconds'].iloc[i + 1]
         
-        cuda_values = df_cuda[(df_cuda.iloc[:, 0] >= start_time) & (df_cuda.iloc[:, 0] + df_cuda.iloc[:, 1] < end_time)].iloc[:, -1].tolist()
+        cuda_values = []
+        while cuda_index < len(df_cuda) and df_cuda.iloc[cuda_index, 0] < end_time:
+            if df_cuda.iloc[cuda_index, 0] >= start_time:
+                cuda_values.append(df_cuda.iloc[cuda_index, -1])
+            cuda_index += 1
+        
+        # Check for overflow cuda_values
+        overflow_index = cuda_index
+        while overflow_index < len(df_cuda) and df_cuda.iloc[overflow_index, 0] < end_time + df_cuda.iloc[overflow_index, 1]:
+            cuda_values.append(df_cuda.iloc[overflow_index, -1])
+            overflow_index += 1
+        
         rows.append([start_time, cuda_values, power.iloc[i]])
     return pd.DataFrame(rows, columns=['timestamp_nanoseconds', 'cuda_values', 'power'])
 
