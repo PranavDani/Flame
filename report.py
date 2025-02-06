@@ -53,28 +53,59 @@ def plot_power_consumption(x, y, full_path_smi, min_ts, max_ts):
     plt.savefig(output_file)
     print(f"Plot saved as {output_file}")
 
+# def combine_data(df_smi, df_cuda, power):
+#     rows = []
+#     cuda_index = 0
+#     for i in range(len(df_smi) - 1):
+#         start_time = df_smi['timestamp_nanoseconds'].iloc[i]
+#         end_time = df_smi['timestamp_nanoseconds'].iloc[i + 1]
+        
+#         cuda_values = []
+#         while cuda_index < len(df_cuda) and df_cuda.iloc[cuda_index, 0] < end_time:
+#             if df_cuda.iloc[cuda_index, 0] >= start_time:
+#                 cuda_values.append(df_cuda.iloc[cuda_index, -1])
+#             cuda_index += 1
+        
+#         # Check for overflow cuda_values
+#         overflow_index = cuda_index
+#         while overflow_index < len(df_cuda) and df_cuda.iloc[overflow_index, 0] < end_time + df_cuda.iloc[overflow_index, 1]:
+#             cuda_values.append(df_cuda.iloc[overflow_index, -1])
+#             overflow_index += 1
+        
+#         rows.append([start_time, cuda_values, power.iloc[i]])
+#     return pd.DataFrame(rows, columns=['timestamp_nanoseconds', 'cuda_values', 'power'])
+
 def combine_data(df_smi, df_cuda, power):
     rows = []
-    cuda_index = 0
     for i in range(len(df_smi) - 1):
         start_time = df_smi['timestamp_nanoseconds'].iloc[i]
         end_time = df_smi['timestamp_nanoseconds'].iloc[i + 1]
         
-        cuda_values = []
-        while cuda_index < len(df_cuda) and df_cuda.iloc[cuda_index, 0] < end_time:
-            if df_cuda.iloc[cuda_index, 0] >= start_time:
-                cuda_values.append(df_cuda.iloc[cuda_index, -1])
-            cuda_index += 1
+        # Find CUDA operations that overlap with current interval
+        cuda_values = df_cuda[
+            ((df_cuda.iloc[:, 0] >= start_time) & (df_cuda.iloc[:, 0] < end_time)) |  # starts in interval
+            ((df_cuda.iloc[:, 0] + df_cuda.iloc[:, 1] > start_time) & (df_cuda.iloc[:, 0] + df_cuda.iloc[:, 1] <= end_time)) |  # ends in interval
+            ((df_cuda.iloc[:, 0] <= start_time) & (df_cuda.iloc[:, 0] + df_cuda.iloc[:, 1] >= end_time))  # spans entire interval
+        ]
         
-        # Check for overflow cuda_values
-        overflow_index = cuda_index
-        while overflow_index < len(df_cuda) and df_cuda.iloc[overflow_index, 0] < end_time + df_cuda.iloc[overflow_index, 1]:
-            cuda_values.append(df_cuda.iloc[overflow_index, -1])
-            overflow_index += 1
+        # Extract both start times and durations for overlapping operations
+        overlapping_ops = []
+        for _, op in cuda_values.iterrows():
+            op_start = op.iloc[0]
+            op_duration = op.iloc[1]
+            op_value = op.iloc[-1]
+            op_end = op_start + op_duration
+            
+            # If operation spans multiple intervals, add it to all relevant intervals
+            if op_end > end_time or op_start < start_time:
+                overlapping_ops.append(op_value)
+                
+        rows.append([start_time, overlapping_ops + cuda_values.iloc[:, -1].tolist(), power.iloc[i]])
         
-        rows.append([start_time, cuda_values, power.iloc[i]])
+        print(f"Interval {i}: {start_time} - {end_time} -> {overlapping_ops + cuda_values.iloc[:, -1].tolist()}")
+        
     return pd.DataFrame(rows, columns=['timestamp_nanoseconds', 'cuda_values', 'power'])
-
+ 
 def calculate_chain_power(df_combined):
     chain_power = defaultdict(float)
     for row in df_combined.iterrows():
