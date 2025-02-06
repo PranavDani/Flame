@@ -430,52 +430,52 @@
 <text id="matched" x="1090.00" y="101" > </text>
 <g id="frames">
 <g >
-<title>advectParticles_k (444 microwatts, 7.18%)</title><rect x="176.5" y="37" width="84.7" height="15.0" fill="rgb(242,172,41)" rx="2" ry="2" />
-<text  x="179.48" y="47.5" >advectPar..</text>
+<title>[CUDA memcpy Host-to-Device] (40 microwatts, 0.23%)</title><rect x="89.6" y="37" width="2.8" height="15.0" fill="rgb(218,62,14)" rx="2" ry="2" />
+<text  x="92.64" y="47.5" ></text>
 </g>
 <g >
-<title>advectVelocity_k (442 microwatts, 7.15%)</title><rect x="261.2" y="37" width="84.4" height="15.0" fill="rgb(210,27,6)" rx="2" ry="2" />
-<text  x="264.17" y="47.5" >advectVel..</text>
+<title>vector_fft_c2r (2,341 microwatts, 13.50%)</title><rect x="871.7" y="37" width="159.3" height="15.0" fill="rgb(212,36,8)" rx="2" ry="2" />
+<text  x="874.68" y="47.5" >vector_fft_c2r</text>
 </g>
 <g >
-<title>vector_fft_r2c (885 microwatts, 14.32%)</title><rect x="1021.1" y="37" width="168.9" height="15.0" fill="rgb(212,36,8)" rx="2" ry="2" />
-<text  x="1024.12" y="47.5" >vector_fft_r2c</text>
+<title>diffuseProject_k (1,171 microwatts, 6.75%)</title><rect x="394.1" y="37" width="79.7" height="15.0" fill="rgb(219,64,15)" rx="2" ry="2" />
+<text  x="397.11" y="47.5" >diffusePr..</text>
 </g>
 <g >
-<title>[CUDA memcpy Device-to-Array] (442 microwatts, 7.15%)</title><rect x="10.0" y="37" width="84.4" height="15.0" fill="rgb(242,170,40)" rx="2" ry="2" />
-<text  x="13.00" y="47.5" >[CUDA mem..</text>
+<title>fluidsGL (17,345 microwatts, 100.00%)</title><rect x="10.0" y="53" width="1180.0" height="15.0" fill="rgb(234,135,32)" rx="2" ry="2" />
+<text  x="13.00" y="63.5" >fluidsGL</text>
 </g>
 <g >
-<title>regular_fft (1,769 microwatts, 28.62%)</title><rect x="430.1" y="37" width="337.7" height="15.0" fill="rgb(211,31,7)" rx="2" ry="2" />
-<text  x="433.05" y="47.5" >regular_fft</text>
+<title>addForces_k (2,094 microwatts, 12.07%)</title><rect x="92.4" y="37" width="142.4" height="15.0" fill="rgb(249,204,48)" rx="2" ry="2" />
+<text  x="95.37" y="47.5" >addForces_k</text>
 </g>
 <g >
-<title>diffuseProject_k (442 microwatts, 7.15%)</title><rect x="345.6" y="37" width="84.5" height="15.0" fill="rgb(219,64,15)" rx="2" ry="2" />
-<text  x="348.61" y="47.5" >diffusePr..</text>
+<title>advectParticles_k (1,170 microwatts, 6.75%)</title><rect x="234.8" y="37" width="79.6" height="15.0" fill="rgb(242,172,41)" rx="2" ry="2" />
+<text  x="237.82" y="47.5" >advectPar..</text>
 </g>
 <g >
-<title>updateVelocity_k (442 microwatts, 7.15%)</title><rect x="767.8" y="37" width="84.4" height="15.0" fill="rgb(233,130,31)" rx="2" ry="2" />
-<text  x="770.81" y="47.5" >updateVel..</text>
+<title>advectVelocity_k (1,171 microwatts, 6.75%)</title><rect x="314.4" y="37" width="79.7" height="15.0" fill="rgb(210,27,6)" rx="2" ry="2" />
+<text  x="317.44" y="47.5" >advectVel..</text>
 </g>
 <g >
-<title>vector_fft_c2r (885 microwatts, 14.32%)</title><rect x="852.2" y="37" width="168.9" height="15.0" fill="rgb(212,36,8)" rx="2" ry="2" />
-<text  x="855.25" y="47.5" >vector_fft_c2r</text>
-</g>
-<g >
-<title>addForces_k (428 microwatts, 6.92%)</title><rect x="94.8" y="37" width="81.7" height="15.0" fill="rgb(249,204,48)" rx="2" ry="2" />
-<text  x="97.76" y="47.5" >addForces_k</text>
-</g>
-<g >
-<title>all (6,182 microwatts, 100%)</title><rect x="10.0" y="69" width="1180.0" height="15.0" fill="rgb(213,39,9)" rx="2" ry="2" />
+<title>all (17,345 microwatts, 100%)</title><rect x="10.0" y="69" width="1180.0" height="15.0" fill="rgb(213,39,9)" rx="2" ry="2" />
 <text  x="13.00" y="79.5" ></text>
 </g>
 <g >
-<title>[CUDA memcpy Host-to-Device] (2 microwatts, 0.03%)</title><rect x="94.4" y="37" width="0.4" height="15.0" fill="rgb(218,62,14)" rx="2" ry="2" />
-<text  x="97.44" y="47.5" ></text>
+<title>updateVelocity_k (1,169 microwatts, 6.74%)</title><rect x="792.1" y="37" width="79.6" height="15.0" fill="rgb(233,130,31)" rx="2" ry="2" />
+<text  x="795.14" y="47.5" >updateVel..</text>
 </g>
 <g >
-<title>fluidsGL (6,182 microwatts, 100.00%)</title><rect x="10.0" y="53" width="1180.0" height="15.0" fill="rgb(234,135,32)" rx="2" ry="2" />
-<text  x="13.00" y="63.5" >fluidsGL</text>
+<title>[CUDA memcpy Device-to-Array] (1,171 microwatts, 6.75%)</title><rect x="10.0" y="37" width="79.6" height="15.0" fill="rgb(242,170,40)" rx="2" ry="2" />
+<text  x="13.00" y="47.5" >[CUDA mem..</text>
+</g>
+<g >
+<title>vector_fft_r2c (2,338 microwatts, 13.48%)</title><rect x="1031.0" y="37" width="159.0" height="15.0" fill="rgb(212,36,8)" rx="2" ry="2" />
+<text  x="1033.95" y="47.5" >vector_fft_r2c</text>
+</g>
+<g >
+<title>regular_fft (4,680 microwatts, 26.98%)</title><rect x="473.8" y="37" width="318.3" height="15.0" fill="rgb(211,31,7)" rx="2" ry="2" />
+<text  x="476.77" y="47.5" >regular_fft</text>
 </g>
 </g>
 </svg>

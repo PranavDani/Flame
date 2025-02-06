@@ -43,7 +43,7 @@ def plot_power_consumption(x, y, full_path_smi, min_ts, max_ts):
     plt.plot(x, y, label='Power Consumption', color='b')
     plt.fill_between(x, y, where=(x >= min_ts / 1e9) & (x <= max_ts / 1e9), color='skyblue', alpha=0.4)
     plt.xlabel('Time (seconds)')
-    plt.ylabel('Power')
+    plt.ylabel('Power (Watts)')
     plt.title('Power Consumption Over Time')
     plt.legend()
     plt.grid(True)
@@ -51,6 +51,7 @@ def plot_power_consumption(x, y, full_path_smi, min_ts, max_ts):
     plt.tight_layout()
     output_file = os.path.join(os.path.dirname(full_path_smi), f"{target}_power_consumption.png")
     plt.savefig(output_file)
+    plt.close()
     print(f"Plot saved as {output_file}")
 
 # def combine_data(df_smi, df_cuda, power):
@@ -102,7 +103,7 @@ def combine_data(df_smi, df_cuda, power):
                 
         rows.append([start_time, overlapping_ops + cuda_values.iloc[:, -1].tolist(), power.iloc[i]])
         
-        print(f"Interval {i}: {start_time} - {end_time} -> {overlapping_ops + cuda_values.iloc[:, -1].tolist()}")
+        # print(f"Interval {i}: {start_time} - {end_time} -> {overlapping_ops + cuda_values.iloc[:, -1].tolist()}")
         
     return pd.DataFrame(rows, columns=['timestamp_nanoseconds', 'cuda_values', 'power'])
  
