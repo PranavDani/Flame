@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if ! source .venv/bin/activate; then
+    echo "Virtual environment activation failed. Please read the readme and install a virtual env."
+fi
+
+export PATH=$(pwd)/.venv/bin:$PATH
+
 # Check if sufficient arguments are provided
 if [ $# -lt 1 ]; then
     echo "Usage: $0 <executable_path> [<executable_args>...]"
@@ -9,16 +15,24 @@ fi
 # Get the executable path and name
 executable_path="$1"
 executable_name=$(basename "$1")
+
+# Check if executable is a Python file
+if [[ "$executable_name" == *.py ]]; then
+    # Remove .py extension from the name
+    executable_name="${executable_name%.py}"
+    run_cmd=(sudo nsys profile -t cuda,nvtx,osrt,cudnn,cublas -s none -o "Results/$executable_name/$executable_name.nsys-rep" "$(pwd)/.venv/bin/python" "$executable_path" "${@:2}")
+else
+    run_cmd=(sudo nsys profile -t cuda,nvtx,osrt,cudnn,cublas -s none -o "Results/$executable_name/$executable_name.nsys-rep" "$executable_path" "${@:2}")
+fi
+
 results_dir="Results/$executable_name"
 echo "Executable name: $executable_name"
 
-# make a directory to store the results
+# Make a directory to store the results
 mkdir -p "$results_dir"
 
-# --stats=true - Enable this to display stats after the run
 # Run the executable in background and pipe the output to a log file
-sudo nsys profile -t cuda,nvtx,osrt,cudnn,cublas -o "$results_dir/$executable_name.nsys-rep" "$executable_path" "${@:2}" & executable_pid=$!
-# sudo $executable_path "${@:2}" 2>&1 | tee "$results_dir/output.log" &
+"${run_cmd[@]}" & executable_pid=$!
 
 echo "Executable PID: $executable_pid is running"
 
@@ -37,12 +51,10 @@ echo "Executable PID: $executable_pid has finished running"
 echo "Killing nvidia-smi PID: $pid_nvidia"
 
 echo "Running nsys stats"
-nsys stats --report cuda_gpu_trace:base --format csv,column --output "$results_dir/$executable_name",- "$results_dir/$executable_name.nsys-rep" 
-
+nsys stats --report cuda_gpu_trace:base --format csv,column --output "$results_dir/$executable_name" "$results_dir/$executable_name.nsys-rep" 
 
 echo "Running report.py"
 ./report.py "$results_dir/$executable_name.csv"
-
 
 echo "Running flamegraph.pl for GPU"
 ./flamegraph.pl --title "GPU Energy Flame Graph" --countname "microwatts" ./Results/$executable_name/$executable_name\_gpu.collapsed > "$results_dir/$executable_name-gpu.svg"
