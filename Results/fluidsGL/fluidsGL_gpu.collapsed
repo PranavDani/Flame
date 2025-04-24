@@ -1,10 +1,10 @@
-fluidsGL;[CUDA memcpy Host-to-Device] 40.178196721311465
-fluidsGL;[CUDA memcpy Device-to-Array] 1170.592434249282
-fluidsGL;advectVelocity_k 1171.1331713433692
-fluidsGL;vector_fft_r2c 2337.8691615022976
-fluidsGL;regular_fft 4679.772015683964
-fluidsGL;diffuseProject_k 1170.9802078380244
-fluidsGL;vector_fft_c2r 2341.2591736575446
-fluidsGL;updateVelocity_k 1169.0912125559692
-fluidsGL;advectParticles_k 1170.3364776614515
-fluidsGL;addForces_k 2093.927948786776
+fluidsGL;[CUDA memcpy Host-to-Device] 1.5971428571428574
+fluidsGL;[CUDA memcpy Device-to-Array] 575.6401536188869
+fluidsGL;advectVelocity_k 573.4592960701332
+fluidsGL;vector_fft_r2c 1146.9704612882085
+fluidsGL;regular_fft 2296.110798604557
+fluidsGL;diffuseProject_k 573.5111652180733
+fluidsGL;vector_fft_c2r 1147.0432460987993
+fluidsGL;updateVelocity_k 573.5216230493986
+fluidsGL;advectParticles_k 574.3038418240819
+fluidsGL;addForces_k 942.4122713707275

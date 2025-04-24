@@ -30,6 +30,8 @@ echo "Executable name: $executable_name"
 
 # Make a directory to store the results
 mkdir -p "$results_dir"
+# Fix permissions for the results directory so it can be deleted later
+sudo chown -R $(whoami):$(whoami) "$results_dir"
 
 # Run the executable in background and pipe the output to a log file
 "${run_cmd[@]}" & executable_pid=$!
